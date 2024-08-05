@@ -82,6 +82,8 @@ const baseEnv = {
       .default('FREE'),
     DEBUG: boolean.optional().default('false'),
     CHAT_API_TIMEOUT: z.coerce.number().optional(),
+    BUTTON_CHOICE_INTERRUPTION: boolean.optional().default('false'),
+    PICTURE_CHOICE_INTERRUPTION: boolean.optional().default('false'),
     RADAR_HIGH_RISK_KEYWORDS: z
       .string()
       .min(1)
