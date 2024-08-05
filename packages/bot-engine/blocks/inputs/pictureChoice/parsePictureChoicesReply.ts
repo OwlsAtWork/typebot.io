@@ -61,10 +61,7 @@ export const parsePictureChoicesReply =
         ].includes(item.id)
       )
 
-      if (matchedItems.length === 0) return {
-        status: 'success',
-        reply: inputValue ?? '',
-      }
+      if (matchedItems.length === 0) return { status: 'fail' }
       return {
         status: 'success',
         reply: matchedItems
@@ -84,10 +81,7 @@ export const parsePictureChoicesReply =
         item.pictureSrc?.toLowerCase().trim() ===
           inputValue.toLowerCase().trim()
     )
-    if (!matchedItem) return {
-      status: 'success',
-      reply: inputValue ?? '',
-    }
+    if (!matchedItem) return { status: 'fail' }
     return {
       status: 'success',
       reply: isNotEmpty(matchedItem.title)
