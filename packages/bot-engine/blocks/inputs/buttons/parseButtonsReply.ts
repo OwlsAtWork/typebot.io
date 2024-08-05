@@ -1,4 +1,5 @@
 import { ChoiceInputBlock, SessionState } from '@typebot.io/schemas'
+import { env } from '@typebot.io/env'
 import { injectVariableValuesInButtonsInputBlock } from './injectVariableValuesInButtonsInputBlock'
 import { ParsedReply } from '../../../types'
 
@@ -59,7 +60,15 @@ export const parseButtonsReply =
           ...matchedItemsByIndex.matchedItemIds,
         ].includes(item.id)
       )
-      if (matchedItems.length === 0) return { status: 'fail' }
+      if (matchedItems.length === 0) {
+        if(env.BUTTON_CHOICE_INTERRUPTION) {
+          return {
+            status: 'success',
+            reply: inputValue ?? '',
+          }
+        }
+        return { status: 'fail' }
+      } 
       return {
         status: 'success',
         reply: matchedItems.map((item) => item.content).join(', '),
@@ -73,7 +82,15 @@ export const parseButtonsReply =
         item.id === inputValue ||
         (item.content && inputValue.trim() === item.content.trim())
     )
-    if (!matchedItem) return { status: 'fail' }
+    if (!matchedItem) {
+      if(env.BUTTON_CHOICE_INTERRUPTION) {
+        return {
+          status: 'success',
+          reply: inputValue ?? '',
+        }
+      }
+      return { status: 'fail' }
+    }
     return {
       status: 'success',
       reply: matchedItem.content ?? '',

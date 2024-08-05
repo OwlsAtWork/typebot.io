@@ -1,5 +1,6 @@
 import { PictureChoiceBlock, SessionState } from '@typebot.io/schemas'
 import { ParsedReply } from '../../../types'
+import { env } from '@typebot.io/env'
 import { injectVariableValuesInPictureChoiceBlock } from './injectVariableValuesInPictureChoiceBlock'
 import { isNotEmpty } from '@typebot.io/lib/utils'
 
@@ -61,7 +62,15 @@ export const parsePictureChoicesReply =
         ].includes(item.id)
       )
 
-      if (matchedItems.length === 0) return { status: 'fail' }
+      if (matchedItems.length === 0) {
+        if(env.PICTURE_CHOICE_INTERRUPTION) {
+          return {
+            status: 'success',
+            reply: inputValue ?? '',
+          }
+        }
+        return { status: 'fail' }
+      }
       return {
         status: 'success',
         reply: matchedItems
@@ -81,7 +90,15 @@ export const parsePictureChoicesReply =
         item.pictureSrc?.toLowerCase().trim() ===
           inputValue.toLowerCase().trim()
     )
-    if (!matchedItem) return { status: 'fail' }
+    if (!matchedItem) {
+      if(env.PICTURE_CHOICE_INTERRUPTION) {
+        return {
+          status: 'success',
+          reply: inputValue ?? '',
+        }
+      }
+      return { status: 'fail' }
+    }
     return {
       status: 'success',
       reply: isNotEmpty(matchedItem.title)
